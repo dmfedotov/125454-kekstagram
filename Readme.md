@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
-* Студент: [Дмитрий Федотов](https://up.htmlacademy.ru/javascript/15/user/125454).
-* Наставник: `Неизвестно`.
+* Студент: [Дмитрий Федотов](https://htmlacademy.ru/profile/id125454).
+* Наставник: [Мария Филиппова](https://htmlacademy.ru/profile/js_nunja).
 
 ---
 
