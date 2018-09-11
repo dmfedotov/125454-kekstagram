@@ -87,7 +87,7 @@ var generatePhotos = function (quanity, params) {
     var descriptionIndex = getRandomNum(0, params.DESCRIPTIONS.length - 1);
 
     var photo = {
-      url: 'photos/' + urls[i] + '.jpg',
+      URL: 'photos/' + urls[i] + '.jpg',
       likes: getRandomNum(params.likes.MIN, params.likes.MAX),
       comments: commentsArr,
       description: params.DESCRIPTIONS[descriptionIndex]
@@ -101,7 +101,7 @@ var generatePhotos = function (quanity, params) {
 var createPhoto = function (photo) {
   var pictureElement = pictureTemplate.cloneNode(true);
 
-  pictureElement.querySelector('.picture__img').src = photo.url;
+  pictureElement.querySelector('.picture__img').src = photo.URL;
   pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
   pictureElement.querySelector('.picture__likes').textContent = photo.likes;
 
@@ -154,7 +154,7 @@ var renderComments = function (comments) {
 var renderBigPhoto = function (photo) {
   var bigPicture = document.querySelector('.big-picture');
 
-  bigPicture.querySelector('.big-picture__img').src = photo.url;
+  bigPicture.querySelector('.big-picture__img img').src = photo.URL;
   bigPicture.querySelector('.social__caption').textContent = photo.description;
   bigPicture.querySelector('.likes-count').textContent = photo.likes;
   bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
