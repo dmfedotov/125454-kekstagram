@@ -271,17 +271,20 @@ var getPhotoObject = function (evt) {
 };
 
 // Показывает большое фото
-var showBigPhoto = function (evt) {
+var showBigPhoto = function () {
+  bigPictureElement.classList.remove('hidden');
+  bodyElement.classList.add('modal-open');
+};
+
+// Клик по фото
+var onPhotoClick = function (evt) {
   var target = evt.target;
   if (target.tagName !== 'IMG') {
     return;
   }
-  if (target.parentNode.tagName === 'A') {
-    evt.preventDefault();
-  }
+  evt.preventDefault();
 
-  bigPictureElement.classList.remove('hidden');
-  bodyElement.classList.add('modal-open');
+  showBigPhoto();
 
   var photoObj = getPhotoObject(evt);
   renderBigPhoto(photoObj);
@@ -292,7 +295,7 @@ var showBigPhoto = function (evt) {
 // Вешаем на каждую картинку обработчик, который показывает большое фото
 var pictureElements = document.querySelectorAll('.picture');
 for (var i = 0; i < pictureElements.length; i++) {
-  pictureElements[i].addEventListener('click', showBigPhoto);
+  pictureElements[i].addEventListener('click', onPhotoClick);
 }
 
 // Закрывает большое фото
