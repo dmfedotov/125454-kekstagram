@@ -85,6 +85,10 @@ var Hashtag = {
   HASH_SYMBOL: '#',
   MAX_LENGTH: 20
 };
+var PinValue = {
+  MIN: 0,
+  MAX: 100
+};
 
 // Для работы с картинками
 var bodyElement = document.querySelector('body');
@@ -130,10 +134,6 @@ var scaleValueElement = scaleElement.querySelector('.scale__control--value');
 var radioChecked = effectsListElement.querySelector('.effects__radio[checked]');
 var previewEffectName = radioChecked.value;
 var currentEffect = 'effects__preview--' + previewEffectName;
-
-// Координаты пина и линии эффекта в слайдере
-var coords = {};
-var sliderEffectLineWidth;
 
 // Генерирует рандомное число в заданном промежутке
 var getRandomNum = function (min, max) {
@@ -343,7 +343,7 @@ scaleSmallerElement.addEventListener('click', function () {
   setPhotoScale(-1);
 });
 
-// Применяет эффект к фото
+// Применяет эффект к фото в зависимости от положения пина
 var applyEffect = function (value) {
   switch (currentEffect) {
     case 'effects__preview--chrome':
@@ -423,14 +423,6 @@ closePopupElement.addEventListener('click', function () {
   closeUploadPopup();
 });
 
-// Считает уровень эффекта к фото по расположению пина в слайдере
-var getEffectLevel = function () {
-  var pinPositionX = (coords.pin.offsetLeft + coords.pin.width / 2) - coords.line.offsetLeft;
-  var effectValue = Math.round(pinPositionX / sliderEffectLineWidth * 100);
-
-  return effectValue;
-};
-
 // По клику на эффект добавляет его к фото
 var onImageEffectClick = function (evt) {
   var target = evt.target;
@@ -464,32 +456,42 @@ effectsListElement.addEventListener('click', onImageEffectClick);
 // Обработчик по нажатию на пин слайдера. Считает расположение
 // пина относительно слайдера и добавляет обработчик
 // отпускания мыши, по которому применяется эффект к фото
-effectPinElement.addEventListener('mousedown', function () {
-  var sliderPinRect = effectPinElement.getBoundingClientRect();
+effectPinElement.addEventListener('mousedown', function (evt) {
   var sliderEffectLineRect = effectLineElement.getBoundingClientRect();
 
-  sliderEffectLineWidth = sliderEffectLineRect.width;
+  var startCoord = evt.clientX;
+  var sliderEffectLineWidth = sliderEffectLineRect.width;
 
-  coords.line = {
-    offsetLeft: sliderEffectLineRect.left
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoord - moveEvt.clientX;
+    startCoord = moveEvt.clientX;
+
+    var positionValue = (effectPinElement.offsetLeft - shift) / sliderEffectLineWidth * 100;
+
+    if (positionValue <= PinValue.MIN) {
+      positionValue = PinValue.MIN;
+      effectLevelValueElement.setAttribute('value', PinValue.MIN);
+    } else if (positionValue >= PinValue.MAX) {
+      positionValue = PinValue.MAX;
+      effectLevelValueElement.setAttribute('value', PinValue.MAX);
+    }
+
+    effectPinElement.style.left = positionValue + '%';
+    effectLevelValueElement.setAttribute('value', Math.round(positionValue));
+    effectDepthElement.style.width = effectPinElement.style.left;
+
+    applyEffect(positionValue);
   };
-  coords.pin = {
-    offsetLeft: sliderPinRect.left,
-    width: sliderPinRect.width
-  };
 
-  var effectValue = getEffectLevel();
-
-  var onMouseUp = function () {
-    document.removeEventListener('mouseup', getEffectLevel);
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
 
-  document.addEventListener('mouseup', function () {
-    getEffectLevel();
-    effectLevelValueElement.setAttribute('value', effectValue);
-    applyEffect(effectValue);
-  });
+  document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 });
 
