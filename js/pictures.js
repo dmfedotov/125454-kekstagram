@@ -41,7 +41,7 @@ var EffectParameter = {
   DEFAULT_VALUE: 100,
   MIN_VALUE: 0,
   LINE_UNIT: '%',
-  DEFAULT_CLASS: 'effects__preview--heat',
+  DEFAULT_CLASS: 'none',
 
   chrome: {
     CLASS: 'effects__preview--chrome',
@@ -70,7 +70,9 @@ var EffectParameter = {
   heat: {
     CLASS: 'effects__preview--heat',
     PROPERTY: 'brightness',
+    MIN_VALUE: 1,
     MAX_VALUE: 3,
+    DIVIDER: 50,
     UNITS: ''
   }
 };
@@ -84,6 +86,10 @@ var Hashtag = {
   QUANITY: 5,
   HASH_SYMBOL: '#',
   MAX_LENGTH: 20
+};
+var PinValue = {
+  MIN: 0,
+  MAX: 100
 };
 
 // Для работы с картинками
@@ -127,13 +133,7 @@ var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
 var scaleValueElement = scaleElement.querySelector('.scale__control--value');
 
 // Для работы с эффектами в форме
-var radioChecked = effectsListElement.querySelector('.effects__radio[checked]');
-var previewEffectName = radioChecked.value;
-var currentEffect = 'effects__preview--' + previewEffectName;
-
-// Координаты пина и линии эффекта в слайдере
-var coords = {};
-var sliderEffectLineWidth;
+var currentEffect = 'effects__preview--' + EffectParameter.DEFAULT_CLASS;
 
 // Генерирует рандомное число в заданном промежутке
 var getRandomNum = function (min, max) {
@@ -343,7 +343,7 @@ scaleSmallerElement.addEventListener('click', function () {
   setPhotoScale(-1);
 });
 
-// Применяет эффект к фото
+// Применяет эффект к фото в зависимости от положения пина
 var applyEffect = function (value) {
   switch (currentEffect) {
     case 'effects__preview--chrome':
@@ -359,7 +359,7 @@ var applyEffect = function (value) {
       imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectParameter.MAX_VALUE + EffectParameter.phobos.UNITS + ')';
       break;
     case 'effects__preview--heat':
-      imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + (value) * EffectParameter.heat.MAX_VALUE / EffectParameter.MAX_VALUE + EffectParameter.heat.UNITS + ')';
+      imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + EffectParameter.heat.UNITS + ')';
       break;
     default:
       imgPreviewElement.style.filter = 'none';
@@ -382,8 +382,12 @@ var setDefaultPinPosition = function () {
 };
 
 var setDefaultEffect = function () {
-  imgPreviewElement.classList = '';
-  imgPreviewElement.classList.add(EffectParameter.DEFAULT_CLASS);
+  var defaultRadioElement = effectsListElement.querySelector('#effect-' + EffectParameter.DEFAULT_CLASS);
+  defaultRadioElement.checked = true;
+  if (EffectParameter.DEFAULT_CLASS === 'none') {
+    effectLevelElement.classList.add('hidden');
+  }
+  imgPreviewElement.classList.add('effects__preview--' + EffectParameter.DEFAULT_CLASS);
 };
 
 // Открывает попап формы
@@ -391,12 +395,10 @@ var openUploadPopup = function () {
   uploadPopupElement.classList.remove('hidden');
 
   setDefaultPhotoScale();
-
-  imgPreviewElement.classList.add('effects__preview--' + previewEffectName);
+  setDefaultEffect();
 
   setDefaultPinPosition();
-  effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
-  applyEffect(EffectParameter.DEFAULT_VALUE);
+  // effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
 
   document.addEventListener('keydown', onEscPress);
 };
@@ -409,7 +411,7 @@ var closeUploadPopup = function () {
   setDefaultPhotoScale();
   inputLoadFileElement.value = null;
 
-  imgPreviewElement.classList.remove('effects__preview--' + previewEffectName);
+  imgPreviewElement.classList = '';
   setDefaultEffect();
   uploadPopupElement.classList.add('hidden');
 
@@ -422,14 +424,6 @@ closePopupElement.addEventListener('click', function () {
   setDefaultEffect();
   closeUploadPopup();
 });
-
-// Считает уровень эффекта к фото по расположению пина в слайдере
-var getEffectLevel = function () {
-  var pinPositionX = (coords.pin.offsetLeft + coords.pin.width / 2) - coords.line.offsetLeft;
-  var effectValue = Math.round(pinPositionX / sliderEffectLineWidth * 100);
-
-  return effectValue;
-};
 
 // По клику на эффект добавляет его к фото
 var onImageEffectClick = function (evt) {
@@ -461,37 +455,56 @@ var onImageEffectClick = function (evt) {
 // Обработчик смены эффекта у фото в форме
 effectsListElement.addEventListener('click', onImageEffectClick);
 
-// Обработчик по нажатию на пин слайдера. Считает расположение
-// пина относительно слайдера и добавляет обработчик
-// отпускания мыши, по которому применяется эффект к фото
-effectPinElement.addEventListener('mousedown', function () {
-  var sliderPinRect = effectPinElement.getBoundingClientRect();
+// Задает положение пина
+var setPinPosition = function (value) {
+  effectPinElement.style.left = value + '%';
+  effectLevelValueElement.setAttribute('value', Math.round(value));
+  effectDepthElement.style.width = effectPinElement.style.left;
+};
+
+// По нажатию на слайдер перемещает пин в место клика
+// Если продолжить двигать мышь - положение пина изменится
+var onMouseDown = function (evt) {
+  var startCoord = evt.clientX;
   var sliderEffectLineRect = effectLineElement.getBoundingClientRect();
+  var clickedPosition = (startCoord - sliderEffectLineRect.left) / sliderEffectLineRect.width * 100;
 
-  sliderEffectLineWidth = sliderEffectLineRect.width;
+  setPinPosition(clickedPosition);
+  applyEffect(clickedPosition);
 
-  coords.line = {
-    offsetLeft: sliderEffectLineRect.left
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoord - moveEvt.clientX;
+    startCoord = moveEvt.clientX;
+
+    var movePosition = (effectPinElement.offsetLeft - shift) / sliderEffectLineRect.width * 100;
+
+    if (movePosition <= PinValue.MIN) {
+      movePosition = PinValue.MIN;
+      effectLevelValueElement.setAttribute('value', PinValue.MIN);
+    } else if (movePosition >= PinValue.MAX) {
+      movePosition = PinValue.MAX;
+      effectLevelValueElement.setAttribute('value', PinValue.MAX);
+
+    }
+
+    setPinPosition(movePosition);
+    applyEffect(movePosition);
   };
-  coords.pin = {
-    offsetLeft: sliderPinRect.left,
-    width: sliderPinRect.width
-  };
 
-  var effectValue = getEffectLevel();
-
-  var onMouseUp = function () {
-    document.removeEventListener('mouseup', getEffectLevel);
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
 
-  document.addEventListener('mouseup', function () {
-    getEffectLevel();
-    effectLevelValueElement.setAttribute('value', effectValue);
-    applyEffect(effectValue);
-  });
+  document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-});
+};
+
+// Обработчик по нажатию на слайдер
+effectLineElement.addEventListener('mousedown', onMouseDown);
 
 // Счиает кол-во повторяющихся элементов в массиве
 var calculateSameElements = function (arr) {
