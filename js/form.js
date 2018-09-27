@@ -68,14 +68,6 @@
     }
   };
 
-  // Обработчики масштабирования фото в форме
-  window.scale.scaleBigger.addEventListener('click', function () {
-    window.scale.setPhotoScale(1);
-  });
-  window.scale.scaleSmaller.addEventListener('click', function () {
-    window.scale.setPhotoScale(-1);
-  });
-
   imgHashtagField.addEventListener('focusin', function () {
     document.removeEventListener('keydown', window.gallery.onEscPress);
   });

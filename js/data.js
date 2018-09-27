@@ -32,10 +32,6 @@
       MAX: 6
     }
   };
-  var pictureTemplate = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-  var socialCommentElement = document.querySelector('.social__comment');
 
   // Создает массив уникальных адресов для картинок
   var getRandomUrls = function (quanity) {
@@ -69,20 +65,20 @@
   };
 
   // Создает массив объектов, где объект - это фото, комментарии и прочее
-  var generatePhotos = function (quanity, parameter) {
+  var generatePhotos = function (quanity) {
     var photos = [];
 
     var urls = getRandomUrls(quanity);
     for (var i = 0; i < quanity; i++) {
-      var commentsQuanity = window.util.getRandomNum(parameter.commentsQuanity.MIN, parameter.commentsQuanity.MAX);
-      var commentsArr = getCommentsArr(commentsQuanity, parameter);
-      var descriptionIndex = window.util.getRandomNum(0, parameter.DESCRIPTIONS.length - 1);
+      var commentsQuanity = window.util.getRandomNum(PhotoParameter.commentsQuanity.MIN, PhotoParameter.commentsQuanity.MAX);
+      var commentsArr = getCommentsArr(commentsQuanity, PhotoParameter);
+      var descriptionIndex = window.util.getRandomNum(0, PhotoParameter.DESCRIPTIONS.length - 1);
 
       var photo = {
         URL: 'photos/' + urls[i] + '.jpg',
-        likes: window.util.getRandomNum(parameter.likes.MIN, parameter.likes.MAX),
+        likes: window.util.getRandomNum(PhotoParameter.likes.MIN, PhotoParameter.likes.MAX),
         comments: commentsArr,
-        description: parameter.DESCRIPTIONS[descriptionIndex]
+        description: PhotoParameter.DESCRIPTIONS[descriptionIndex]
       };
       photos.push(photo);
     }
@@ -90,29 +86,10 @@
     return photos;
   };
 
-  var photos = generatePhotos(PHOTOS_QUANITY, PhotoParameter);
+  var photos = generatePhotos(PHOTOS_QUANITY);
 
   window.data = {
-    photos: photos,
-
-    createPhoto: function (photo) {
-      var pictureElement = pictureTemplate.cloneNode(true);
-
-      pictureElement.querySelector('.picture__img').src = photo.URL;
-      pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
-      pictureElement.querySelector('.picture__likes').textContent = photo.likes;
-
-      return pictureElement;
-    },
-
-    createComment: function (comment) {
-      var socialComment = socialCommentElement.cloneNode(true);
-      var randomAvatar = window.util.getRandomNum(PhotoParameter.commentAvatar.MIN, PhotoParameter.commentAvatar.MAX);
-
-      socialComment.querySelector('.social__picture').src = 'img/avatar-' + randomAvatar + '.svg';
-      socialComment.querySelector('.social__text').textContent = comment;
-
-      return socialComment;
-    }
+    getPhotos: photos,
+    getParameters: PhotoParameter
   };
 })();

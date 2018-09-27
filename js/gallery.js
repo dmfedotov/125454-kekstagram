@@ -7,9 +7,6 @@
   var closePopupElement = imgUploadElement.querySelector('#upload-cancel');
   var uploadPopupElement = imgUploadElement.querySelector('.img-upload__overlay');
 
-  // Удаляет стандартные комментарии в превью
-  window.preview.deleteStandartComments();
-
   // Клик по маленькому фото
   var onPhotoClick = function (evt) {
     var target = evt.target;
@@ -18,9 +15,7 @@
     }
     evt.preventDefault();
 
-    window.preview.showBigPhoto();
-    var photoObj = window.preview.getPhotoObject(evt);
-    window.preview.renderBigPhoto(photoObj);
+    window.preview.show(evt);
 
     document.addEventListener('keydown', onEscPress);
   };
@@ -32,14 +27,14 @@
   }
 
   // Обработчик закрытия большого фото
-  closeBigPictureElement.addEventListener('click', window.preview.closeBigPhoto);
+  closeBigPictureElement.addEventListener('click', window.preview.hide);
 
   // Обработчик по клавише ESC
   var onEscPress = function (evt) {
     if (window.util.isEscEvent(evt)) {
       inputLoadFileElement.value = null;
       closeUploadPopup();
-      window.preview.closeBigPhoto();
+      window.preview.hide();
     }
   };
 
@@ -47,9 +42,9 @@
   var openUploadPopup = function () {
     uploadPopupElement.classList.remove('hidden');
 
-    window.scale.setDefaultPhotoScale();
+    window.defaultScale();
     window.effects.setDefaultEffect();
-    window.effects.setDefaultPinPosition();
+    window.effects.setDefaultPin();
 
     document.addEventListener('keydown', onEscPress);
   };
@@ -59,7 +54,7 @@
 
   // Закрывает попап формы
   var closeUploadPopup = function () {
-    window.scale.setDefaultPhotoScale();
+    window.defaultScale();
     inputLoadFileElement.value = null;
     window.effects.setDefaultEffect();
     uploadPopupElement.classList.add('hidden');

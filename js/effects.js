@@ -122,6 +122,20 @@
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  var setDefaultEffect = function () {
+    imgPreviewElement.style = '';
+    imgPreviewElement.classList = '';
+    effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
+
+    var defaultRadioElement = effectsListElement.querySelector('#effect-' + EffectParameter.DEFAULT_CLASS);
+    defaultRadioElement.checked = true;
+    if (EffectParameter.DEFAULT_CLASS === 'none') {
+      effectLevelElement.classList.add('hidden');
+    }
+
+    imgPreviewElement.classList.add('effects__preview--' + EffectParameter.DEFAULT_CLASS);
+  };
+
   // По нажатию на слайдер перемещает пин в место клика
   // Если продолжить двигать мышь - положение пина изменится
   var onMouseDown = function (evt) {
@@ -167,19 +181,7 @@
   effectLineElement.addEventListener('mousedown', onMouseDown);
 
   window.effects = {
-    setDefaultPinPosition: setDefaultPinPosition,
-    setDefaultEffect: function () {
-      imgPreviewElement.style = '';
-      imgPreviewElement.classList = '';
-      effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
-
-      var defaultRadioElement = effectsListElement.querySelector('#effect-' + EffectParameter.DEFAULT_CLASS);
-      defaultRadioElement.checked = true;
-      if (EffectParameter.DEFAULT_CLASS === 'none') {
-        effectLevelElement.classList.add('hidden');
-      }
-
-      imgPreviewElement.classList.add('effects__preview--' + EffectParameter.DEFAULT_CLASS);
-    }
+    setDefaultPin: setDefaultPinPosition,
+    setDefaultEffect: setDefaultEffect
   };
 })();
