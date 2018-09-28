@@ -44,10 +44,9 @@
     var target = evt.target;
     var imageSrc = target.getAttribute('src');
 
-    for (var i = 0; i < window.data.getPhotos.length; i++) {
-      var photoObj = window.data.getPhotos[i];
-
-      if (photoObj.URL === imageSrc) {
+    for (var i = 0; i < window.picturesData.length; i++) {
+      var photoObj = window.picturesData[i];
+      if (photoObj.url === imageSrc) {
         break;
       }
     }
@@ -56,8 +55,8 @@
   };
 
   var renderBigPhoto = function (photo) {
-    bigPictureElement.querySelector('.big-picture__img img').src = photo.URL;
-    bigPictureElement.querySelector('.social__caption').textContent = photo.description;
+    bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
+    bigPictureElement.querySelector('.social__caption').textContent = window.getDescription(photo);
     bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
     bigPictureElement.querySelector('.comments-count').textContent = photo.comments.length;
 

@@ -1,33 +1,12 @@
 'use strict';
 
 (function () {
+  var picturesElement = document.querySelector('.pictures');
   var closeBigPictureElement = document.querySelector('.big-picture__cancel');
-  var imgUploadElement = document.querySelector('.img-upload');
+  var imgUploadElement = picturesElement.querySelector('.img-upload');
   var inputLoadFileElement = imgUploadElement.querySelector('#upload-file');
   var closePopupElement = imgUploadElement.querySelector('#upload-cancel');
   var uploadPopupElement = imgUploadElement.querySelector('.img-upload__overlay');
-
-  // Клик по маленькому фото
-  var onPhotoClick = function (evt) {
-    var target = evt.target;
-    if (target.tagName !== 'IMG') {
-      return;
-    }
-    evt.preventDefault();
-
-    window.preview.show(evt);
-
-    document.addEventListener('keydown', onEscPress);
-  };
-
-  // Вешаем на каждую картинку обработчик, который показывает большое фото
-  var pictureElements = document.querySelectorAll('.picture');
-  for (var i = 0; i < pictureElements.length; i++) {
-    pictureElements[i].addEventListener('click', onPhotoClick);
-  }
-
-  // Обработчик закрытия большого фото
-  closeBigPictureElement.addEventListener('click', window.preview.hide);
 
   // Обработчик по клавише ESC
   var onEscPress = function (evt) {
@@ -37,6 +16,22 @@
       window.preview.hide();
     }
   };
+
+  // Клик по маленькому фото
+  var onPhotoClick = function (evt) {
+    var target = evt.target;
+    if (!target.parentNode.classList.contains('picture') || target.tagName !== 'IMG') {
+      return;
+    }
+    evt.preventDefault();
+
+    window.preview.show(evt);
+
+    document.addEventListener('keydown', onEscPress);
+  };
+
+  picturesElement.addEventListener('click', onPhotoClick);
+  closeBigPictureElement.addEventListener('click', window.preview.hide);
 
   // Открывает попап формы
   var openUploadPopup = function () {
@@ -69,5 +64,9 @@
     closeUploadPopup();
   });
 
-  window.onEscPress = onEscPress;
+  window.gallery = {
+    onEscPress: onEscPress,
+    closePopup: closeUploadPopup,
+    photoClick: onPhotoClick
+  };
 })();

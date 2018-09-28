@@ -8,7 +8,7 @@
   var createPhoto = function (photo) {
     var pictureElement = pictureTemplate.cloneNode(true);
 
-    pictureElement.querySelector('.picture__img').src = photo.URL;
+    pictureElement.querySelector('.picture__img').src = photo.url;
     pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
     pictureElement.querySelector('.picture__likes').textContent = photo.likes;
 
@@ -17,14 +17,15 @@
 
   var picturesElement = document.querySelector('.pictures');
   // Добавляет созданные DOM элементы с фото на страницу
-  var renderPhotos = function (elements) {
-    var photosFragment = document.createDocumentFragment();
+  var onLoad = function (picturesData) {
+    window.picturesData = picturesData;
+    var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < elements.length; i++) {
-      photosFragment.appendChild(createPhoto(elements[i]));
+    for (var i = 0; i < picturesData.length; i++) {
+      fragment.appendChild(createPhoto(picturesData[i]));
     }
-    picturesElement.appendChild(photosFragment);
+    picturesElement.appendChild(fragment);
   };
 
-  renderPhotos(window.data.getPhotos);
+  window.backend.download(onLoad, window.showError);
 })();
