@@ -2,23 +2,15 @@
 
 (function () {
   var EffectParameter = {
-    MAX_VALUE: 100,
-    DEFAULT_VALUE: 100,
-    MIN_VALUE: 0,
-    LINE_UNIT: '%',
-    DEFAULT_CLASS: 'none',
-
     chrome: {
       CLASS: 'effects__preview--chrome',
       PROPERTY: 'grayscale',
       MAX_VALUE: 1,
-      UNITS: ''
     },
     sepia: {
       CLASS: 'effects__preview--sepia',
       PROPERTY: 'sepia',
       MAX_VALUE: 1,
-      UNITS: ''
     },
     marvin: {
       CLASS: 'effects__preview--marvin',
@@ -38,13 +30,17 @@
       MIN_VALUE: 1,
       MAX_VALUE: 3,
       DIVIDER: 50,
-      UNITS: ''
     }
+  };
+  var EffectValue = {
+    MAX: 100,
+    DEFAULT: 100,
   };
   var PinValue = {
     MIN: 0,
     MAX: 100
   };
+  var DEFAULT_EFFECT = 'none';
 
   var imgUploadElement = document.querySelector('.img-upload');
   var effectLevelElement = imgUploadElement.querySelector('.effect-level');
@@ -54,11 +50,11 @@
   var effectLineElement = effectLevelElement.querySelector('.effect-level__line');
   var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
-  var currentEffect = 'effects__preview--' + window.defaultEffect;
+  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
 
   // Задает положение пина по умолчанию
   var setDefaultPinPosition = function () {
-    effectPinElement.style.left = EffectParameter.DEFAULT_VALUE + '%';
+    effectPinElement.style.left = EffectValue.DEFAULT + '%';
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
@@ -66,19 +62,19 @@
   var applyEffect = function (value) {
     switch (currentEffect) {
       case 'effects__preview--chrome':
-        imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectParameter.MAX_VALUE + EffectParameter.chrome.UNITS + ')';
+        imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
         break;
       case 'effects__preview--sepia':
-        imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectParameter.MAX_VALUE + EffectParameter.sepia.UNITS + ')';
+        imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
         break;
       case 'effects__preview--marvin':
-        imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectParameter.MAX_VALUE + EffectParameter.marvin.UNITS + ')';
+        imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNITS + ')';
         break;
       case 'effects__preview--phobos':
-        imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectParameter.MAX_VALUE + EffectParameter.phobos.UNITS + ')';
+        imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.MAX + EffectParameter.phobos.UNITS + ')';
         break;
       case 'effects__preview--heat':
-        imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + EffectParameter.heat.UNITS + ')';
+        imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + ')';
         break;
       default:
         imgPreviewElement.style.filter = 'none';
@@ -92,7 +88,7 @@
       return;
     }
 
-    imgPreviewElement.classList = '';
+    imgPreviewElement.classList.remove(currentEffect);
     var effectName = target.value;
 
     currentEffect = 'effects__preview--' + effectName;
@@ -108,8 +104,8 @@
     // При смене эффекта, его значение и значение пина
     // сбрасываются на дефолтные
     setDefaultPinPosition();
-    effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
-    applyEffect(EffectParameter.DEFAULT_VALUE);
+    effectLevelValueElement.value = EffectValue.DEFAULT;
+    applyEffect(EffectValue.DEFAULT);
   };
 
   // Обработчик смены эффекта у фото в форме
@@ -118,22 +114,17 @@
   // Задает положение пина
   var setPinPosition = function (value) {
     effectPinElement.style.left = value + '%';
-    effectLevelValueElement.setAttribute('value', Math.round(value));
+    effectLevelValueElement.value = Math.round(value);
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
   var setDefaultEffect = function () {
     imgPreviewElement.style = '';
-    imgPreviewElement.classList = '';
-    effectLevelValueElement.setAttribute('value', EffectParameter.DEFAULT_VALUE);
+    imgPreviewElement.classList.remove(currentEffect);
+    effectLevelValueElement.value = EffectValue.DEFAULT;
 
-    var defaultRadioElement = effectsListElement.querySelector('#effect-' + EffectParameter.DEFAULT_CLASS);
-    defaultRadioElement.checked = true;
-    if (EffectParameter.DEFAULT_CLASS === 'none') {
-      effectLevelElement.classList.add('hidden');
-    }
-
-    imgPreviewElement.classList.add('effects__preview--' + EffectParameter.DEFAULT_CLASS);
+    effectLevelElement.classList.add('hidden');
+    imgPreviewElement.classList.add('effects__preview--' + DEFAULT_EFFECT);
   };
 
   // По нажатию на слайдер перемещает пин в место клика
@@ -156,10 +147,10 @@
 
       if (movePosition <= PinValue.MIN) {
         movePosition = PinValue.MIN;
-        effectLevelValueElement.setAttribute('value', PinValue.MIN);
+        effectLevelValueElement.value = PinValue.MIN;
       } else if (movePosition >= PinValue.MAX) {
         movePosition = PinValue.MAX;
-        effectLevelValueElement.setAttribute('value', PinValue.MAX);
+        effectLevelValueElement.value = PinValue.MAX;
 
       }
 

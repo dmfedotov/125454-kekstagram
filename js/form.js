@@ -2,7 +2,7 @@
 
 (function () {
   var Hashtag = {
-    QUANITY: 5,
+    QUANTITY: 5,
     HASH_SYMBOL: '#',
     MAX_LENGTH: 20
   };
@@ -48,7 +48,7 @@
         errorMessage = 'Хэш-теги разделяются пробелами';
       } else if (hashtagList[l].charAt(0) === Hashtag.HASH_SYMBOL && hashtagList[l].length === 1) {
         errorMessage = 'Хеш-тег не может состоять только из одной решётки';
-      } else if (hashtagList.length > Hashtag.QUANITY) {
+      } else if (hashtagList.length > Hashtag.QUANTITY) {
         errorMessage = 'Максимальное количество хеш-тегов: 5';
       } else if (hashtagList[l].length > Hashtag.MAX_LENGTH) {
         errorMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
@@ -69,13 +69,13 @@
   };
 
   imgHashtagField.addEventListener('focusin', function () {
-    document.removeEventListener('keydown', window.gallery.onEscPress);
+    document.removeEventListener('keydown', window.onEscPress);
   });
   imgCommentField.addEventListener('focusin', function () {
-    document.removeEventListener('keydown', window.gallery.onEscPress);
+    document.removeEventListener('keydown', window.onEscPress);
   });
   imgHashtagField.addEventListener('focusout', function () {
-    document.addEventListener('keydown', window.gallery.onEscPress);
+    document.addEventListener('keydown', window.onEscPress);
   });
 
   imgHashtagField.addEventListener('input', imgHashtagValidity);
