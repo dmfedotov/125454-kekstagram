@@ -19,14 +19,17 @@
     }
   };
 
-  var renderError = function () {
+  var renderError = function (message) {
     var errorElement = errorTemplate.cloneNode(true);
+    var errorTitle = errorElement.querySelector('.error__title');
+    errorTitle.style.lineHeight = '1.2';
+    errorTitle.textContent = message;
     document.querySelector('main').appendChild(errorElement);
   };
 
-  var onError = function () {
+  var onError = function (errorMessage) {
     window.gallery.closePopup();
-    renderError();
+    renderError(errorMessage);
 
     var errorButtonElement = document.querySelector('.error__button');
     document.querySelector('main').removeEventListener('click', window.gallery.photoClick);

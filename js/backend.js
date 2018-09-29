@@ -3,7 +3,7 @@
 (function () {
   var URL_LOAD = 'https://js.dump.academy/kekstagram/data';
   var URL_SAVE = 'https://js.dump.academy/kekstagram';
-  var TIMEOUT = 1000;
+  var TIMEOUT = 10000;
   var SUCCESS_CODE = 200;
 
   var createRequest = function (success, error) {
