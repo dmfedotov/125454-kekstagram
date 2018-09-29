@@ -15,13 +15,12 @@
       } else {
         error('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
-
-      xhr.addEventListener('error', function () {
-        error('Произошла ошибка соединения');
-      });
-      xhr.addEventListener('timeout', function () {
-        error('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
+    });
+    xhr.addEventListener('error', function () {
+      error('Произошла ошибка соединения');
+    });
+    xhr.addEventListener('timeout', function () {
+      error('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIMEOUT;
