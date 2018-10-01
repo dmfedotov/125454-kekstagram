@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var newPhoto = {
+  var NewPhoto = {
     MIN: 0,
     MAX: 10
   };
@@ -11,25 +11,30 @@
       var filterNew = filterElement.querySelector('#filter-new');
       var filterDiscussed = filterElement.querySelector('#filter-discussed');
 
+      var getTenNewPhotos = function (photos) {
+        return window.util.shuffleArray(photos).slice(NewPhoto.MIN, NewPhoto.MAX);
+      };
+
+      var sortByComments = function (posts) {
+        return posts.slice().sort(function (first, second) {
+          return second.comments.length - first.comments.length;
+        });
+      };
+
       var changeFilters = function (evt) {
         var pictures = picturesContainer.querySelectorAll('.picture');
-        var sortFunction = null;
         pictures.forEach(function (picture) {
           picturesContainer.removeChild(picture);
         });
         switch (evt.target) {
           case filterPopular:
-            sortFunction = null;
             window.render(data);
             break;
           case filterNew:
-            window.render(window.util.shuffleArray(data).slice(newPhoto.MIN, newPhoto.MAX));
+            window.render(getTenNewPhotos(data));
             break;
           case filterDiscussed:
-            sortFunction = function (first, second) {
-              return second.comments.length - first.comments.length;
-            };
-            window.render(sortFunction ? data.slice().sort(sortFunction) : data);
+            window.render(sortByComments(data));
             break;
         }
       };

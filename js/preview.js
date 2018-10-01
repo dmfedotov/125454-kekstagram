@@ -9,6 +9,7 @@
   var bigPictureElement = document.querySelector('.big-picture');
   var socialCommentsListElement = bigPictureElement.querySelector('.social__comments');
   var socialCommentElement = socialCommentsListElement.querySelector('.social__comment');
+  var loadButton = bigPictureElement.querySelector('.comments-loader');
 
   var createComment = function (comment) {
     var socialComment = socialCommentElement.cloneNode(true);
@@ -55,20 +56,12 @@
   };
 
   var renderBigPhoto = function (photo) {
-    var displayedComments = 0;
     bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
     bigPictureElement.querySelector('.social__caption').textContent = window.getDescription(photo);
     bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
 
     renderComments(photo.comments);
-
-    if (photo.comments.length > DISPLAY_COMMENTS) {
-      displayedComments = DISPLAY_COMMENTS;
-    } else {
-      displayedComments = photo.comments.length;
-    }
-    var commentsCountString = displayedComments + ' из ' + '<span class="comments-count">' + photo.comments.length + '</span>' + ' комментариев';
-    bigPictureElement.querySelector('.social__comment-count').innerHTML = commentsCountString;
+    window.comments.showCount(photo.comments);
   };
 
   var showBigPhoto = function (evt) {
@@ -77,13 +70,24 @@
 
     var photoObj = getPhotoObject(evt);
     renderBigPhoto(photoObj);
+
+    if (photoObj.comments.length <= DISPLAY_COMMENTS) {
+      loadButton.classList.add('visually-hidden');
+      return;
+    }
+    loadButton.addEventListener('click', window.comments.load);
+    loadButton.addEventListener('click', function () {
+      window.comments.showCount(photoObj.comments);
+    });
   };
 
   var hideBigPhoto = function () {
     deleteStandartComments();
+    loadButton.classList.remove('visually-hidden');
     bigPictureElement.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
 
+    loadButton.removeEventListener('click', window.comments.load);
     document.removeEventListener('keydown', window.util.isEscEvent);
   };
 

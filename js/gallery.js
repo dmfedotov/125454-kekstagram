@@ -67,7 +67,6 @@
 
   var onLoad = function (data) {
     window.render(data);
-    filtersElement.classList.remove('img-filters--inactive');
     window.filters.init(filtersElement, picturesElement, data);
   };
 
