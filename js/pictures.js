@@ -15,17 +15,15 @@
     return pictureElement;
   };
 
-  var picturesElement = document.querySelector('.pictures');
   // Добавляет созданные DOM элементы с фото на страницу
-  var onLoad = function (picturesData) {
-    window.picturesData = picturesData;
+  var picturesElement = document.querySelector('.pictures');
+  window.render = function (data) {
+    window.picturesData = data;
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < picturesData.length; i++) {
-      fragment.appendChild(createPhoto(picturesData[i]));
-    }
+    data.forEach(function (element) {
+      fragment.appendChild(createPhoto(element));
+    });
     picturesElement.appendChild(fragment);
   };
-
-  window.backend.download(onLoad, window.showError);
 })();
