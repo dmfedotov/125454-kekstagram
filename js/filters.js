@@ -22,8 +22,8 @@
       };
 
       var changeFilters = function (evt) {
-        var pictures = picturesContainer.querySelectorAll('.picture');
-        pictures.forEach(function (picture) {
+        var picturesElements = picturesContainer.querySelectorAll('.picture');
+        picturesElements.forEach(function (picture) {
           picturesContainer.removeChild(picture);
         });
         switch (evt.target) {
@@ -40,8 +40,8 @@
       };
 
       var changeActiveClass = function (currentFilter) {
-        var filters = filterElement.querySelectorAll('.img-filters__button');
-        filters.forEach(function (filter) {
+        var filtersElements = filterElement.querySelectorAll('.img-filters__button');
+        filtersElements.forEach(function (filter) {
           filter.classList.remove('img-filters__button--active');
         });
         currentFilter.classList.add('img-filters__button--active');

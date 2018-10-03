@@ -8,8 +8,8 @@
   var bigPictureElement = document.querySelector('.big-picture');
 
   var showCommentsCount = function (comments) {
-    var displayedComments = bigPictureElement.querySelectorAll('.social__comment:not(.visually-hidden)').length;
-    var commentsCountString = displayedComments + ' из ' + '<span class="comments-count">' + comments.length + '</span>' + ' комментариев';
+    var displayedCommentsElements = bigPictureElement.querySelectorAll('.social__comment:not(.visually-hidden)').length;
+    var commentsCountString = displayedCommentsElements + ' из ' + '<span class="comments-count">' + comments.length + '</span>' + ' комментариев';
     bigPictureElement.querySelector('.social__comment-count').innerHTML = commentsCountString;
   };
 

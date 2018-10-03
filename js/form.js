@@ -10,10 +10,10 @@
     .content
     .querySelector('.success');
   var imgUploadElement = document.querySelector('.img-upload');
-  var form = imgUploadElement.querySelector('.img-upload__form');
-  var imgHashtagField = imgUploadElement.querySelector('.text__hashtags');
-  var imgCommentField = imgUploadElement.querySelector('.text__description');
-  var imgSubmitButton = imgUploadElement.querySelector('.img-upload__submit');
+  var formElement = imgUploadElement.querySelector('.img-upload__form');
+  var imgHashtagFieldElement = imgUploadElement.querySelector('.text__hashtags');
+  var imgCommentFieldElement = imgUploadElement.querySelector('.text__description');
+  var imgSubmitButtonElement = imgUploadElement.querySelector('.img-upload__submit');
 
   var calculateSameElements = function (arr) {
     var repeats = 0;
@@ -30,12 +30,12 @@
   };
 
   var imgHashtagValidity = function () {
-    imgHashtagField.style.outline = '';
+    imgHashtagFieldElement.style.outline = '';
     var errorMessage = '';
-    var hashtagValue = imgHashtagField.value.trim();
+    var hashtagValue = imgHashtagFieldElement.value.trim();
 
     if (hashtagValue === '') {
-      imgHashtagField.setCustomValidity(errorMessage);
+      imgHashtagFieldElement.setCustomValidity(errorMessage);
       return;
     }
 
@@ -59,7 +59,7 @@
     if (hashtagRepeats > 0) {
       errorMessage = 'Один и тот же хэш-тег не может быть использован дважды';
     }
-    imgHashtagField.setCustomValidity(errorMessage);
+    imgHashtagFieldElement.setCustomValidity(errorMessage);
   };
 
   var highlightInvalidField = function (field) {
@@ -68,21 +68,21 @@
     }
   };
 
-  imgHashtagField.addEventListener('focusin', function () {
+  imgHashtagFieldElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', window.gallery.onEscPress);
   });
-  imgCommentField.addEventListener('focusin', function () {
+  imgCommentFieldElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', window.gallery.onEscPress);
   });
-  imgHashtagField.addEventListener('focusout', function () {
+  imgHashtagFieldElement.addEventListener('focusout', function () {
     document.addEventListener('keydown', window.gallery.onEscPress);
   });
 
-  imgHashtagField.addEventListener('input', imgHashtagValidity);
+  imgHashtagFieldElement.addEventListener('input', imgHashtagValidity);
 
-  imgSubmitButton.addEventListener('click', function () {
-    highlightInvalidField(imgHashtagField);
-    highlightInvalidField(imgCommentField);
+  imgSubmitButtonElement.addEventListener('click', function () {
+    highlightInvalidField(imgHashtagFieldElement);
+    highlightInvalidField(imgCommentFieldElement);
   });
 
   var resetForm = function () {
@@ -97,8 +97,8 @@
   };
 
   var closeSuccess = function () {
-    var success = document.querySelector('main').querySelector('.success');
-    document.querySelector('main').removeChild(success);
+    var successElement = document.querySelector('main').querySelector('.success');
+    document.querySelector('main').removeChild(successElement);
 
     document.removeEventListener('keydown', onEscPress);
     document.removeEventListener('click', closeSuccess);
@@ -123,8 +123,8 @@
     successButtonElement.addEventListener('click', closeSuccess);
   };
 
-  form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), onSuccess, window.showError);
+  formElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(formElement), onSuccess, window.showError);
     evt.preventDefault();
   });
 })();

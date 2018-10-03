@@ -6,8 +6,8 @@
     .querySelector('.error');
 
   var closeError = function () {
-    var error = document.querySelector('main').querySelector('.error');
-    document.querySelector('main').removeChild(error);
+    var errorElement = document.querySelector('main').querySelector('.error');
+    document.querySelector('main').removeChild(errorElement);
 
     document.removeEventListener('keydown', onEscPress);
     document.removeEventListener('click', closeError);
@@ -21,9 +21,9 @@
 
   var renderError = function (message) {
     var errorElement = errorTemplate.cloneNode(true);
-    var errorTitle = errorElement.querySelector('.error__title');
-    errorTitle.style.lineHeight = '1.2';
-    errorTitle.textContent = message;
+    var errorTitleElement = errorElement.querySelector('.error__title');
+    errorTitleElement.style.lineHeight = '1.2';
+    errorTitleElement.textContent = message;
     document.querySelector('main').appendChild(errorElement);
   };
 
