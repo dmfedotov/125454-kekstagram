@@ -42,16 +42,16 @@
     var hashtagList = hashtagValue.toLowerCase().split(' ');
     var hashtagRepeats = calculateSameElements(hashtagList);
 
-    hashtagList.forEach(function (hashtagValue) {
-      if (hashtagValue.charAt(0) !== Hashtag.HASH_SYMBOL) {
+    hashtagList.forEach(function (hashtagText) {
+      if (hashtagText.charAt(0) !== Hashtag.HASH_SYMBOL) {
         errorMessage = 'Хэш-тег должен начинаться с символа #';
-      } else if (hashtagValue.indexOf(Hashtag.HASH_SYMBOL, 1) > 0) {
+      } else if (hashtagText.indexOf(Hashtag.HASH_SYMBOL, 1) > 0) {
         errorMessage = 'Хэш-теги разделяются пробелами';
-      } else if (hashtagValue.charAt(0) === Hashtag.HASH_SYMBOL && hashtagValue.length === 1) {
+      } else if (hashtagText.charAt(0) === Hashtag.HASH_SYMBOL && hashtagText.length === 1) {
         errorMessage = 'Хеш-тег не может состоять только из одной решётки';
       } else if (hashtagList.length > Hashtag.QUANTITY) {
         errorMessage = 'Максимальное количество хеш-тегов: 5';
-      } else if (hashtagValue.length > Hashtag.MAX_LENGTH) {
+      } else if (hashtagText.length > Hashtag.MAX_LENGTH) {
         errorMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
       }
     });
