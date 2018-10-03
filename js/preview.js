@@ -72,7 +72,7 @@
     renderBigPhoto(photoObj);
 
     if (photoObj.comments.length <= DISPLAY_COMMENTS) {
-      loadButton.classList.add('visually-hidden');
+      loadButton.classList.add('hidden');
       return;
     }
     loadButton.addEventListener('click', window.comments.load);
@@ -83,7 +83,7 @@
 
   var hideBigPhoto = function () {
     deleteStandartComments();
-    loadButton.classList.remove('visually-hidden');
+    loadButton.classList.remove('hidden');
     bigPictureElement.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
 

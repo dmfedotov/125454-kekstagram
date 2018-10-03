@@ -20,7 +20,7 @@
     });
 
     if (bigPictureElement.querySelectorAll('.social__comment.visually-hidden').length === 0) {
-      evt.target.classList.add('visually-hidden');
+      evt.target.classList.add('hidden');
     }
   };
 
