@@ -21,7 +21,6 @@
     return socialComment;
   };
 
-  // Добавляет комментарии в DOM
   var renderComments = function (comments) {
     var commentsFragment = document.createDocumentFragment();
 

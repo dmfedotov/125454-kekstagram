@@ -6,7 +6,6 @@
     HASH_SYMBOL: '#',
     MAX_LENGTH: 20
   };
-  // Для работы с формой загрузки фото
   var successTemplate = document.querySelector('#success')
     .content
     .querySelector('.success');
@@ -16,7 +15,6 @@
   var imgCommentField = imgUploadElement.querySelector('.text__description');
   var imgSubmitButton = imgUploadElement.querySelector('.img-upload__submit');
 
-  // Счиает кол-во повторяющихся элементов в массиве
   var calculateSameElements = function (arr) {
     var repeats = 0;
 
@@ -31,7 +29,6 @@
     return repeats;
   };
 
-  // Проверяет хештег поле на валидность
   var imgHashtagValidity = function () {
     imgHashtagField.style.outline = '';
     var errorMessage = '';
@@ -65,7 +62,6 @@
     imgHashtagField.setCustomValidity(errorMessage);
   };
 
-  // Подсвечивает невалидные поля
   var highlightInvalidField = function (field) {
     if (!field.validity.valid) {
       field.style.outline = '2px solid red';

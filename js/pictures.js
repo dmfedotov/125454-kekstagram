@@ -15,7 +15,6 @@
     return pictureElement;
   };
 
-  // Добавляет созданные DOM элементы с фото на страницу
   var picturesElement = document.querySelector('.pictures');
   window.render = function (data) {
     window.picturesData = data;

@@ -9,7 +9,6 @@
   var closePopupElement = imgUploadElement.querySelector('#upload-cancel');
   var uploadPopupElement = imgUploadElement.querySelector('.img-upload__overlay');
 
-  // Обработчик по клавише ESC
   var onEscPress = function (evt) {
     if (window.util.isEscEvent(evt)) {
       inputLoadFileElement.value = null;
@@ -18,7 +17,6 @@
     }
   };
 
-  // Клик по маленькому фото
   var onPhotoClick = function (evt) {
     var target = evt.target;
     if (!target.parentNode.classList.contains('picture') || target.tagName !== 'IMG') {
@@ -34,7 +32,6 @@
   picturesElement.addEventListener('click', onPhotoClick);
   closeBigPictureElement.addEventListener('click', window.preview.hide);
 
-  // Открывает попап формы
   var openUploadPopup = function () {
     uploadPopupElement.classList.remove('hidden');
 
@@ -45,10 +42,8 @@
     document.addEventListener('keydown', onEscPress);
   };
 
-  // Обработчик открытия попапа формы
   inputLoadFileElement.addEventListener('change', openUploadPopup);
 
-  // Закрывает попап формы
   var closeUploadPopup = function () {
     window.defaultScale();
     inputLoadFileElement.value = null;
@@ -58,7 +53,6 @@
     document.removeEventListener('keydown', onEscPress);
   };
 
-  // Обработчики закрытия попапа формы
   closePopupElement.addEventListener('click', function () {
     inputLoadFileElement.value = null;
     window.effects.setDefaultEffect();

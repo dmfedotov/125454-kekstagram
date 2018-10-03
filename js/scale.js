@@ -7,7 +7,6 @@
     MAX: 100,
     DEFAULT: 100
   };
-  // Для работы с изменением размера фото в форме
   var imgUploadElement = document.querySelector('.img-upload');
   var imgWrapPreviewElement = imgUploadElement.querySelector('.img-upload__preview');
   var scaleElement = document.querySelector('.scale');
@@ -30,7 +29,6 @@
     imgWrapPreviewElement.style.transform = 'scale(' + ScaleValue.DEFAULT / 100 + ')';
   };
 
-  // Обработчики масштабирования фото в форме
   scaleBiggerElement.addEventListener('click', function () {
     setPhotoScale(1);
   });
