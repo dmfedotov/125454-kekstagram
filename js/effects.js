@@ -118,6 +118,7 @@
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  // Задает эффект по умолчанию
   var setDefaultEffect = function () {
     imgPreviewElement.style = '';
     imgPreviewElement.classList.remove(currentEffect);
@@ -128,7 +129,7 @@
   };
 
   // По нажатию на слайдер перемещает пин в место клика
-  // Если продолжить двигать мышь - положение пина изменится
+  // Если продолжить двигать мышь, то положение пина изменится
   var onMouseDown = function (evt) {
     var startCoord = evt.clientX;
     var sliderEffectLineRect = effectLineElement.getBoundingClientRect();

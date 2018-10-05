@@ -1,10 +1,9 @@
 'use strict';
 
 (function () {
-  var picturesElement = document.querySelector('.pictures');
-  var filtersElement = document.querySelector('.img-filters__form');
+  var picturesContainerElement = document.querySelector('.pictures');
   var closeBigPictureElement = document.querySelector('.big-picture__cancel');
-  var imgUploadElement = picturesElement.querySelector('.img-upload');
+  var imgUploadElement = picturesContainerElement.querySelector('.img-upload');
   var inputLoadFileElement = imgUploadElement.querySelector('#upload-file');
   var closePopupElement = imgUploadElement.querySelector('#upload-cancel');
   var uploadPopupElement = imgUploadElement.querySelector('.img-upload__overlay');
@@ -31,7 +30,7 @@
     document.addEventListener('keydown', onEscPress);
   };
 
-  picturesElement.addEventListener('click', onPhotoClick);
+  picturesContainerElement.addEventListener('click', onPhotoClick);
   closeBigPictureElement.addEventListener('click', window.preview.hide);
 
   // Открывает попап формы
@@ -65,9 +64,10 @@
     closeUploadPopup();
   });
 
+  // Коллбек успешной загрузки данных
   var onLoad = function (data) {
     window.render(data);
-    window.filters.init(filtersElement, picturesElement, data);
+    window.showFilters(data);
   };
 
   window.backend.download(onLoad, window.showError);

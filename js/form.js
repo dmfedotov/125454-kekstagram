@@ -6,15 +6,15 @@
     HASH_SYMBOL: '#',
     MAX_LENGTH: 20
   };
-  // Для работы с формой загрузки фото
   var successTemplate = document.querySelector('#success')
     .content
     .querySelector('.success');
-  var imgUploadElement = document.querySelector('.img-upload');
-  var form = imgUploadElement.querySelector('.img-upload__form');
-  var imgHashtagField = imgUploadElement.querySelector('.text__hashtags');
-  var imgCommentField = imgUploadElement.querySelector('.text__description');
-  var imgSubmitButton = imgUploadElement.querySelector('.img-upload__submit');
+  var mainElement = document.querySelector('main');
+  var imgUploadElement = mainElement.querySelector('.img-upload');
+  var formElement = imgUploadElement.querySelector('.img-upload__form');
+  var imgHashtagFieldElement = imgUploadElement.querySelector('.text__hashtags');
+  var imgCommentFieldElement = imgUploadElement.querySelector('.text__description');
+  var imgSubmitButtonElement = imgUploadElement.querySelector('.img-upload__submit');
 
   // Счиает кол-во повторяющихся элементов в массиве
   var calculateSameElements = function (arr) {
@@ -33,36 +33,36 @@
 
   // Проверяет хештег поле на валидность
   var imgHashtagValidity = function () {
-    imgHashtagField.style.outline = '';
+    imgHashtagFieldElement.style.outline = '';
     var errorMessage = '';
-    var hashtagValue = imgHashtagField.value.trim();
+    var hashtagValue = imgHashtagFieldElement.value.trim();
 
     if (hashtagValue === '') {
-      imgHashtagField.setCustomValidity(errorMessage);
+      imgHashtagFieldElement.setCustomValidity(errorMessage);
       return;
     }
 
     var hashtagList = hashtagValue.toLowerCase().split(' ');
     var hashtagRepeats = calculateSameElements(hashtagList);
 
-    for (var l = 0; l < hashtagList.length; l++) {
-      if (hashtagList[l].charAt(0) !== Hashtag.HASH_SYMBOL) {
+    hashtagList.forEach(function (hashtagText) {
+      if (hashtagText.charAt(0) !== Hashtag.HASH_SYMBOL) {
         errorMessage = 'Хэш-тег должен начинаться с символа #';
-      } else if (hashtagList[l].indexOf(Hashtag.HASH_SYMBOL, 1) > 0) {
+      } else if (hashtagText.indexOf(Hashtag.HASH_SYMBOL, 1) > 0) {
         errorMessage = 'Хэш-теги разделяются пробелами';
-      } else if (hashtagList[l].charAt(0) === Hashtag.HASH_SYMBOL && hashtagList[l].length === 1) {
+      } else if (hashtagText.charAt(0) === Hashtag.HASH_SYMBOL && hashtagText.length === 1) {
         errorMessage = 'Хеш-тег не может состоять только из одной решётки';
       } else if (hashtagList.length > Hashtag.QUANTITY) {
         errorMessage = 'Максимальное количество хеш-тегов: 5';
-      } else if (hashtagList[l].length > Hashtag.MAX_LENGTH) {
+      } else if (hashtagText.length > Hashtag.MAX_LENGTH) {
         errorMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
       }
-    }
+    });
 
     if (hashtagRepeats > 0) {
       errorMessage = 'Один и тот же хэш-тег не может быть использован дважды';
     }
-    imgHashtagField.setCustomValidity(errorMessage);
+    imgHashtagFieldElement.setCustomValidity(errorMessage);
   };
 
   // Подсвечивает невалидные поля
@@ -72,48 +72,53 @@
     }
   };
 
-  imgHashtagField.addEventListener('focusin', function () {
+  imgHashtagFieldElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', window.gallery.onEscPress);
   });
-  imgCommentField.addEventListener('focusin', function () {
+  imgCommentFieldElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', window.gallery.onEscPress);
   });
-  imgHashtagField.addEventListener('focusout', function () {
+  imgHashtagFieldElement.addEventListener('focusout', function () {
     document.addEventListener('keydown', window.gallery.onEscPress);
   });
 
-  imgHashtagField.addEventListener('input', imgHashtagValidity);
+  imgHashtagFieldElement.addEventListener('input', imgHashtagValidity);
 
-  imgSubmitButton.addEventListener('click', function () {
-    highlightInvalidField(imgHashtagField);
-    highlightInvalidField(imgCommentField);
+  imgSubmitButtonElement.addEventListener('click', function () {
+    highlightInvalidField(imgHashtagFieldElement);
+    highlightInvalidField(imgCommentFieldElement);
   });
 
+  // Сбрасывает значения формы на дефолтные
   var resetForm = function () {
     window.defaultScale();
     window.effects.setDefaultPin();
     window.effects.setDefaultEffect();
   };
 
+  // Добавляет в DOM сообщение об успешной загрузки картинки
   var renderSuccess = function () {
     var successElement = successTemplate.cloneNode(true);
-    document.querySelector('main').appendChild(successElement);
+    mainElement.appendChild(successElement);
   };
 
+  // Закрывает сообщение успеха о загрузке
   var closeSuccess = function () {
-    var success = document.querySelector('main').querySelector('.success');
-    document.querySelector('main').removeChild(success);
+    var successElement = mainElement.querySelector('.success');
+    mainElement.removeChild(successElement);
 
     document.removeEventListener('keydown', onEscPress);
     document.removeEventListener('click', closeSuccess);
   };
 
+  // Закрывает сообщение успеха по ESC
   var onEscPress = function (evt) {
     if (window.util.isEscEvent(evt)) {
       closeSuccess();
     }
   };
 
+  // Коллбек успешной обработки данных
   var onSuccess = function () {
     resetForm();
     window.gallery.closePopup();
@@ -121,14 +126,14 @@
 
     var successButtonElement = document.querySelector('.success__button');
 
-    document.querySelector('main').removeEventListener('click', window.gallery.photoClick);
+    mainElement.removeEventListener('click', window.gallery.photoClick);
     document.addEventListener('keydown', onEscPress);
     document.addEventListener('click', closeSuccess);
     successButtonElement.addEventListener('click', closeSuccess);
   };
 
-  form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), onSuccess, window.showError);
+  formElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(formElement), onSuccess, window.showError);
     evt.preventDefault();
   });
 })();

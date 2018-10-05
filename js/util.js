@@ -10,12 +10,15 @@
     isEscEvent: function (evt) {
       return evt.keyCode === KeyCode.ESC;
     },
+    // Возвращает случайное число и диапозоне
     getRandomNum: function (min, max) {
       return Math.floor(min + Math.random() * (max + 1 - min));
     },
+    // Возвращает случайный элемент массива
     getRandomElement: function (arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     },
+    // Перемешивает массив
     shuffleArray: function (arr) {
       var resultArr = [];
 

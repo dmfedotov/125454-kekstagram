@@ -4,7 +4,9 @@
   var pictureTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
+  var picturesContainerElement = document.querySelector('.pictures');
 
+  // Создает DOM элемент с картинкой и наполняет его информацией
   var createPhoto = function (photo) {
     var pictureElement = pictureTemplate.cloneNode(true);
 
@@ -16,14 +18,17 @@
   };
 
   // Добавляет созданные DOM элементы с фото на страницу
-  var picturesElement = document.querySelector('.pictures');
   window.render = function (data) {
+    var picturesElements = picturesContainerElement.querySelectorAll('.picture');
+    picturesElements.forEach(function (picture) {
+      picturesContainerElement.removeChild(picture);
+    });
     window.picturesData = data;
     var fragment = document.createDocumentFragment();
 
     data.forEach(function (element) {
       fragment.appendChild(createPhoto(element));
     });
-    picturesElement.appendChild(fragment);
+    picturesContainerElement.appendChild(fragment);
   };
 })();

@@ -7,7 +7,6 @@
     MAX: 100,
     DEFAULT: 100
   };
-  // Для работы с изменением размера фото в форме
   var imgUploadElement = document.querySelector('.img-upload');
   var imgWrapPreviewElement = imgUploadElement.querySelector('.img-upload__preview');
   var scaleElement = document.querySelector('.scale');
@@ -15,6 +14,7 @@
   var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
   var scaleValueElement = scaleElement.querySelector('.scale__control--value');
 
+  // Задает масштаб фото в форме
   var setPhotoScale = function (direction) {
     var currentScale = parseInt(scaleValueElement.value, 10);
     currentScale = currentScale + (ScaleValue.STEP * direction);
@@ -25,6 +25,7 @@
     }
   };
 
+  // Задает масштаб по умолчанию
   var setDefaultPhotoScale = function () {
     scaleValueElement.value = ScaleValue.DEFAULT + '%';
     imgWrapPreviewElement.style.transform = 'scale(' + ScaleValue.DEFAULT / 100 + ')';

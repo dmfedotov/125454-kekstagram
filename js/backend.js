@@ -6,13 +6,13 @@
   var TIMEOUT = 10000;
   var SUCCESS_CODE = 200;
 
+  // Создает xhr запрос
   var createRequest = function (success, error) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_CODE) {
         success(xhr.response);
-        window.showFilters();
       } else {
         error('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -28,12 +28,15 @@
     return xhr;
   };
 
+  // Cоздает xhr запрос получения данных с сервера
   var load = function (onLoad, onError) {
     var xhr = createRequest(onLoad, onError);
     xhr.open('GET', URL_LOAD);
     xhr.send();
 
   };
+
+  // Создает xhr запрос отправки данных на сервер
   var save = function (data, onLoad, onError) {
     var xhr = createRequest(onLoad, onError);
     xhr.open('POST', URL_SAVE);

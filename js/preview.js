@@ -9,8 +9,9 @@
   var bigPictureElement = document.querySelector('.big-picture');
   var socialCommentsListElement = bigPictureElement.querySelector('.social__comments');
   var socialCommentElement = socialCommentsListElement.querySelector('.social__comment');
-  var loadButton = bigPictureElement.querySelector('.comments-loader');
+  var loadButtonElement = bigPictureElement.querySelector('.comments-loader');
 
+  // Создает DOM элемент с комментарием и наполняет его информацией
   var createComment = function (comment) {
     var socialComment = socialCommentElement.cloneNode(true);
     var randomAvatar = window.util.getRandomNum(Avatar.MIN, Avatar.MAX);
@@ -36,11 +37,13 @@
     socialCommentsListElement.appendChild(commentsFragment);
   };
 
+  // Удаляет стандартные комментарии из разметки
   var deleteStandartComments = function () {
     socialCommentsListElement.innerHTML = '';
   };
   deleteStandartComments();
 
+  // Получает объект картинки на миниатюру которой нажал пользователь
   var getPhotoObject = function (evt) {
     var target = evt.target;
     var imageSrc = target.getAttribute('src');
@@ -55,6 +58,7 @@
     return photoObj;
   };
 
+  // Создает DOM елемент с большим фото и наполняет его информацией
   var renderBigPhoto = function (photo) {
     bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
     bigPictureElement.querySelector('.social__caption').textContent = window.getDescription(photo);
@@ -64,6 +68,7 @@
     window.comments.showCount(photo.comments);
   };
 
+  // Показыает большое фото
   var showBigPhoto = function (evt) {
     bigPictureElement.classList.remove('hidden');
     document.querySelector('body').classList.add('modal-open');
@@ -72,22 +77,23 @@
     renderBigPhoto(photoObj);
 
     if (photoObj.comments.length <= DISPLAY_COMMENTS) {
-      loadButton.classList.add('visually-hidden');
+      loadButtonElement.classList.add('hidden');
       return;
     }
-    loadButton.addEventListener('click', window.comments.load);
-    loadButton.addEventListener('click', function () {
+    loadButtonElement.addEventListener('click', window.comments.load);
+    loadButtonElement.addEventListener('click', function () {
       window.comments.showCount(photoObj.comments);
     });
   };
 
+  // Скрывает большое фото
   var hideBigPhoto = function () {
     deleteStandartComments();
-    loadButton.classList.remove('visually-hidden');
+    loadButtonElement.classList.remove('hidden');
     bigPictureElement.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
 
-    loadButton.removeEventListener('click', window.comments.load);
+    loadButtonElement.removeEventListener('click', window.comments.load);
     document.removeEventListener('keydown', window.util.isEscEvent);
   };
 
