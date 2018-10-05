@@ -11,6 +11,7 @@
   var socialCommentElement = socialCommentsListElement.querySelector('.social__comment');
   var loadButtonElement = bigPictureElement.querySelector('.comments-loader');
 
+  // Создает DOM элемент с комментарием и наполняет его информацией
   var createComment = function (comment) {
     var socialComment = socialCommentElement.cloneNode(true);
     var randomAvatar = window.util.getRandomNum(Avatar.MIN, Avatar.MAX);
@@ -21,6 +22,7 @@
     return socialComment;
   };
 
+  // Добавляет комментарии в DOM
   var renderComments = function (comments) {
     var commentsFragment = document.createDocumentFragment();
 
@@ -35,11 +37,13 @@
     socialCommentsListElement.appendChild(commentsFragment);
   };
 
+  // Удаляет стандартные комментарии из разметки
   var deleteStandartComments = function () {
     socialCommentsListElement.innerHTML = '';
   };
   deleteStandartComments();
 
+  // Получает объект картинки на миниатюру которой нажал пользователь
   var getPhotoObject = function (evt) {
     var target = evt.target;
     var imageSrc = target.getAttribute('src');
@@ -54,6 +58,7 @@
     return photoObj;
   };
 
+  // Создает DOM елемент с большим фото и наполняет его информацией
   var renderBigPhoto = function (photo) {
     bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
     bigPictureElement.querySelector('.social__caption').textContent = window.getDescription(photo);
@@ -63,6 +68,7 @@
     window.comments.showCount(photo.comments);
   };
 
+  // Показыает большое фото
   var showBigPhoto = function (evt) {
     bigPictureElement.classList.remove('hidden');
     document.querySelector('body').classList.add('modal-open');
@@ -80,6 +86,7 @@
     });
   };
 
+  // Скрывает большое фото
   var hideBigPhoto = function () {
     deleteStandartComments();
     loadButtonElement.classList.remove('hidden');

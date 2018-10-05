@@ -14,6 +14,7 @@
   var scaleBiggerElement = scaleElement.querySelector('.scale__control--bigger');
   var scaleValueElement = scaleElement.querySelector('.scale__control--value');
 
+  // Задает масштаб фото в форме
   var setPhotoScale = function (direction) {
     var currentScale = parseInt(scaleValueElement.value, 10);
     currentScale = currentScale + (ScaleValue.STEP * direction);
@@ -24,11 +25,13 @@
     }
   };
 
+  // Задает масштаб по умолчанию
   var setDefaultPhotoScale = function () {
     scaleValueElement.value = ScaleValue.DEFAULT + '%';
     imgWrapPreviewElement.style.transform = 'scale(' + ScaleValue.DEFAULT / 100 + ')';
   };
 
+  // Обработчики масштабирования фото в форме
   scaleBiggerElement.addEventListener('click', function () {
     setPhotoScale(1);
   });

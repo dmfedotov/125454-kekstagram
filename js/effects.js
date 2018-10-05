@@ -52,11 +52,13 @@
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
   var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
 
+  // Задает положение пина по умолчанию
   var setDefaultPinPosition = function () {
     effectPinElement.style.left = EffectValue.DEFAULT + '%';
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  // Применяет эффект к фото в зависимости от положения пина
   var applyEffect = function (value) {
     switch (currentEffect) {
       case 'effects__preview--chrome':
@@ -79,6 +81,7 @@
     }
   };
 
+  // По клику на эффект добавляет его к фото
   var onImageEffectClick = function (evt) {
     var target = evt.target;
     if (target.tagName !== 'INPUT') {
@@ -98,19 +101,24 @@
       imgPreviewElement.classList.add(currentEffect);
     }
 
+    // При смене эффекта, его значение и значение пина
+    // сбрасываются на дефолтные
     setDefaultPinPosition();
     effectLevelValueElement.value = EffectValue.DEFAULT;
     applyEffect(EffectValue.DEFAULT);
   };
 
+  // Обработчик смены эффекта у фото в форме
   effectsListElement.addEventListener('click', onImageEffectClick);
 
+  // Задает положение пина
   var setPinPosition = function (value) {
     effectPinElement.style.left = value + '%';
     effectLevelValueElement.value = Math.round(value);
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  // Задает эффект по умолчанию
   var setDefaultEffect = function () {
     imgPreviewElement.style = '';
     imgPreviewElement.classList.remove(currentEffect);
@@ -120,6 +128,8 @@
     imgPreviewElement.classList.add('effects__preview--' + DEFAULT_EFFECT);
   };
 
+  // По нажатию на слайдер перемещает пин в место клика
+  // Если продолжить двигать мышь, то положение пина изменится
   var onMouseDown = function (evt) {
     var startCoord = evt.clientX;
     var sliderEffectLineRect = effectLineElement.getBoundingClientRect();
@@ -159,6 +169,7 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  // Обработчик по нажатию на слайдер
   effectLineElement.addEventListener('mousedown', onMouseDown);
 
   window.effects = {
