@@ -50,7 +50,27 @@
   var effectLineElement = effectLevelElement.querySelector('.effect-level__line');
   var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
-  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
+  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value
+  var classNameToCalculateFunction = {
+    'effects__preview--chrome': function (value) {
+      return EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
+    },
+    'effects__preview--sepia': function (value) {
+      return EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
+    },
+    'effects__preview--marvin': function (value) {
+      return EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNITS + ')';
+    },
+    'effects__preview--phobos': function (value) {
+      return EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.MAX + EffectParameter.phobos.UNITS + ')';
+    },
+    'effects__preview--heat': function (value) {
+      return EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + ')';
+    },
+    'effects__preview--none': function () {
+      return 'none';
+    }
+  };
 
   // Задает положение пина по умолчанию
   var setDefaultPinPosition = function () {
@@ -60,25 +80,8 @@
 
   // Применяет эффект к фото в зависимости от положения пина
   var applyEffect = function (value) {
-    switch (currentEffect) {
-      case 'effects__preview--chrome':
-        imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-        break;
-      case 'effects__preview--sepia':
-        imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-        break;
-      case 'effects__preview--marvin':
-        imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNITS + ')';
-        break;
-      case 'effects__preview--phobos':
-        imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.MAX + EffectParameter.phobos.UNITS + ')';
-        break;
-      case 'effects__preview--heat':
-        imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + ')';
-        break;
-      default:
-        imgPreviewElement.style.filter = 'none';
-    }
+    var effectFunction = classNameToCalculateFunction[currentEffect];
+    imgPreviewElement.style.filter = effectFunction(value);
   };
 
   // По клику на эффект добавляет его к фото
