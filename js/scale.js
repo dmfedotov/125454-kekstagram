@@ -39,5 +39,7 @@
     setPhotoScale(-1);
   });
 
-  window.defaultScale = setDefaultPhotoScale;
+  window.scale = {
+    setDefault: setDefaultPhotoScale
+  };
 })();

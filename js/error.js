@@ -41,5 +41,7 @@
     errorButtonElement.addEventListener('click', closeError);
   };
 
-  window.showError = onError;
+  window.error = {
+    show: onError
+  };
 })();

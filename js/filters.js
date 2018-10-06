@@ -23,20 +23,20 @@
     });
   };
 
-  window.showFilters = function (data) {
+  var showFilters = function (data) {
     filtersElement.classList.remove('img-filters--inactive');
 
     // Смена фильтра
     var changeFilters = function (evt) {
       switch (evt.target) {
         case filterPopularElement:
-          window.render(data);
+          window.pictures.render(data);
           break;
         case filterNewElement:
-          window.render(getTenNewPhotos(data));
+          window.pictures.render(getTenNewPhotos(data));
           break;
         case filterDiscussedElement:
-          window.render(sortByComments(data));
+          window.pictures.render(sortByComments(data));
           break;
       }
     };
@@ -50,7 +50,7 @@
       currentFilter.classList.add('img-filters__button--active');
     };
 
-    var changeFiltersDebounced = window.debounce(changeFilters);
+    var changeFiltersDebounced = window.util.debounce(changeFilters);
     filtersFormElement.addEventListener('click', function (evt) {
       var target = evt.target;
       if (target.tagName === 'BUTTON') {
@@ -58,5 +58,9 @@
         changeFiltersDebounced(evt);
       }
     });
+  };
+
+  window.filters = {
+    show: showFilters
   };
 })();

@@ -11,7 +11,11 @@
   ];
 
   // Возвращает случайное описание к фото
-  window.getDescription = function () {
+  var getDescription = function () {
     return window.util.getRandomElement(DESCRIPTIONS);
+  };
+
+  window.data = {
+    getDescription: getDescription
   };
 })();
