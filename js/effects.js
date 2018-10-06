@@ -50,7 +50,7 @@
   var effectLineElement = effectLevelElement.querySelector('.effect-level__line');
   var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
-  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value
+  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
   var classNameToCalculateFunction = {
     'effects__preview--chrome': function (value) {
       return EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
