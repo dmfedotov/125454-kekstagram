@@ -50,7 +50,8 @@
   var effectLineElement = effectLevelElement.querySelector('.effect-level__line');
   var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
-  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
+  var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
+  var currentEffectClass = 'effects__preview--' + currentEffectName;
   var classNameToCalculateFunction = {
     'effects__preview--chrome': function (value) {
       return EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
@@ -80,7 +81,7 @@
 
   // Применяет эффект к фото в зависимости от положения пина
   var applyEffect = function (value) {
-    var effectFunction = classNameToCalculateFunction[currentEffect];
+    var effectFunction = classNameToCalculateFunction[currentEffectClass];
     imgPreviewElement.style.filter = effectFunction(value);
   };
 
@@ -91,17 +92,17 @@
       return;
     }
 
-    imgPreviewElement.classList.remove(currentEffect);
-    var effectName = target.value;
+    imgPreviewElement.classList.remove(currentEffectClass);
+    currentEffectName = target.value;
 
-    currentEffect = 'effects__preview--' + effectName;
+    currentEffectClass = 'effects__preview--' + currentEffectName;
 
-    if (currentEffect !== 'effects__preview--none') {
+    if (currentEffectClass !== 'effects__preview--none') {
       effectLevelElement.classList.remove('hidden');
-      imgPreviewElement.classList.add(currentEffect);
+      imgPreviewElement.classList.add(currentEffectClass);
     } else {
       effectLevelElement.classList.add('hidden');
-      imgPreviewElement.classList.add(currentEffect);
+      imgPreviewElement.classList.add(currentEffectClass);
     }
 
     // При смене эффекта, его значение и значение пина
@@ -123,8 +124,11 @@
 
   // Задает эффект по умолчанию
   var setDefaultEffect = function () {
+    var defaultRadioElement = effectsListElement.querySelector('#effect-' + DEFAULT_EFFECT);
+    defaultRadioElement.checked = true;
+
     imgPreviewElement.style = '';
-    imgPreviewElement.classList.remove(currentEffect);
+    imgPreviewElement.classList.remove(currentEffectClass);
     effectLevelValueElement.value = EffectValue.DEFAULT;
 
     effectLevelElement.classList.add('hidden');
