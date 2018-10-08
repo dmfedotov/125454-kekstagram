@@ -18,7 +18,7 @@
   };
 
   // Добавляет созданные DOM элементы с фото на страницу
-  window.render = function (data) {
+  var render = function (data) {
     var picturesElements = picturesContainerElement.querySelectorAll('.picture');
     picturesElements.forEach(function (picture) {
       picturesContainerElement.removeChild(picture);
@@ -30,5 +30,9 @@
       fragment.appendChild(createPhoto(element));
     });
     picturesContainerElement.appendChild(fragment);
+  };
+
+  window.pictures = {
+    render: render
   };
 })();

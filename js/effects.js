@@ -5,31 +5,37 @@
     chrome: {
       CLASS: 'effects__preview--chrome',
       PROPERTY: 'grayscale',
+      MIN_VALUE: 0,
       MAX_VALUE: 1,
+      UNIT: ''
     },
     sepia: {
       CLASS: 'effects__preview--sepia',
       PROPERTY: 'sepia',
+      MIN_VALUE: 0,
       MAX_VALUE: 1,
+      UNIT: ''
     },
     marvin: {
       CLASS: 'effects__preview--marvin',
       PROPERTY: 'invert',
+      MIN_VALUE: 0,
       MAX_VALUE: 100,
-      UNITS: '%'
+      UNIT: '%'
     },
     phobos: {
       CLASS: 'effects__preview--phobos',
       PROPERTY: 'blur',
+      MIN_VALUE: 0,
       MAX_VALUE: 3,
-      UNITS: 'px'
+      UNIT: 'px'
     },
     heat: {
       CLASS: 'effects__preview--heat',
       PROPERTY: 'brightness',
       MIN_VALUE: 1,
       MAX_VALUE: 3,
-      DIVIDER: 50,
+      UNIT: ''
     }
   };
   var EffectValue = {
@@ -50,7 +56,8 @@
   var effectLineElement = effectLevelElement.querySelector('.effect-level__line');
   var effectDepthElement = effectLevelElement.querySelector('.effect-level__depth');
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
-  var currentEffect = 'effects__preview--' + effectsListElement.querySelector('.effects__radio:checked').value;
+  var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
+  var currentEffectClass = 'effects__preview--' + currentEffectName;
 
   // Задает положение пина по умолчанию
   var setDefaultPinPosition = function () {
@@ -58,27 +65,14 @@
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  // Рассчитывает значение фильтра
+  var getFilterValue = function (effect, value) {
+    return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+  };
+
   // Применяет эффект к фото в зависимости от положения пина
   var applyEffect = function (value) {
-    switch (currentEffect) {
-      case 'effects__preview--chrome':
-        imgPreviewElement.style.filter = EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-        break;
-      case 'effects__preview--sepia':
-        imgPreviewElement.style.filter = EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-        break;
-      case 'effects__preview--marvin':
-        imgPreviewElement.style.filter = EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNITS + ')';
-        break;
-      case 'effects__preview--phobos':
-        imgPreviewElement.style.filter = EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.MAX + EffectParameter.phobos.UNITS + ')';
-        break;
-      case 'effects__preview--heat':
-        imgPreviewElement.style.filter = EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + ')';
-        break;
-      default:
-        imgPreviewElement.style.filter = 'none';
-    }
+    imgPreviewElement.style.filter = currentEffectName !== DEFAULT_EFFECT ? EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')' : 'none';
   };
 
   // По клику на эффект добавляет его к фото
@@ -88,17 +82,17 @@
       return;
     }
 
-    imgPreviewElement.classList.remove(currentEffect);
-    var effectName = target.value;
+    imgPreviewElement.classList.remove(currentEffectClass);
+    currentEffectName = target.value;
 
-    currentEffect = 'effects__preview--' + effectName;
+    currentEffectClass = 'effects__preview--' + currentEffectName;
 
-    if (currentEffect !== 'effects__preview--none') {
+    if (currentEffectClass !== 'effects__preview--none') {
       effectLevelElement.classList.remove('hidden');
-      imgPreviewElement.classList.add(currentEffect);
+      imgPreviewElement.classList.add(currentEffectClass);
     } else {
       effectLevelElement.classList.add('hidden');
-      imgPreviewElement.classList.add(currentEffect);
+      imgPreviewElement.classList.add(currentEffectClass);
     }
 
     // При смене эффекта, его значение и значение пина
@@ -120,8 +114,11 @@
 
   // Задает эффект по умолчанию
   var setDefaultEffect = function () {
+    var defaultRadioElement = effectsListElement.querySelector('#effect-' + DEFAULT_EFFECT);
+    defaultRadioElement.checked = true;
+
     imgPreviewElement.style = '';
-    imgPreviewElement.classList.remove(currentEffect);
+    imgPreviewElement.classList.remove(currentEffectClass);
     effectLevelValueElement.value = EffectValue.DEFAULT;
 
     effectLevelElement.classList.add('hidden');
@@ -152,7 +149,6 @@
       } else if (movePosition >= PinValue.MAX) {
         movePosition = PinValue.MAX;
         effectLevelValueElement.value = PinValue.MAX;
-
       }
 
       setPinPosition(movePosition);

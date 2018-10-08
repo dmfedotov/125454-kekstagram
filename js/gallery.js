@@ -37,7 +37,7 @@
   var openUploadPopup = function () {
     uploadPopupElement.classList.remove('hidden');
 
-    window.defaultScale();
+    window.scale.setDefault();
     window.effects.setDefaultEffect();
     window.effects.setDefaultPin();
 
@@ -49,7 +49,7 @@
 
   // Закрывает попап формы
   var closeUploadPopup = function () {
-    window.defaultScale();
+    window.scale.setDefault();
     inputLoadFileElement.value = null;
     window.effects.setDefaultEffect();
     uploadPopupElement.classList.add('hidden');
@@ -66,11 +66,11 @@
 
   // Коллбек успешной загрузки данных
   var onLoad = function (data) {
-    window.render(data);
-    window.showFilters(data);
+    window.pictures.render(data);
+    window.filters.show(data);
   };
 
-  window.backend.download(onLoad, window.showError);
+  window.backend.download(onLoad, window.error.show);
 
   window.gallery = {
     onEscPress: onEscPress,

@@ -61,7 +61,7 @@
   // Создает DOM елемент с большим фото и наполняет его информацией
   var renderBigPhoto = function (photo) {
     bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
-    bigPictureElement.querySelector('.social__caption').textContent = window.getDescription(photo);
+    bigPictureElement.querySelector('.social__caption').textContent = window.data.getDescription();
     bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
 
     renderComments(photo.comments);

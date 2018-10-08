@@ -91,7 +91,7 @@
 
   // Сбрасывает значения формы на дефолтные
   var resetForm = function () {
-    window.defaultScale();
+    window.scale.setDefault();
     window.effects.setDefaultPin();
     window.effects.setDefaultEffect();
   };
@@ -133,7 +133,7 @@
   };
 
   formElement.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(formElement), onSuccess, window.showError);
+    window.backend.save(new FormData(formElement), onSuccess, window.error.show);
     evt.preventDefault();
   });
 })();
