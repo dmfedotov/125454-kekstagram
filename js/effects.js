@@ -5,31 +5,37 @@
     chrome: {
       CLASS: 'effects__preview--chrome',
       PROPERTY: 'grayscale',
+      MIN_VALUE: 0,
       MAX_VALUE: 1,
+      UNIT: ''
     },
     sepia: {
       CLASS: 'effects__preview--sepia',
       PROPERTY: 'sepia',
+      MIN_VALUE: 0,
       MAX_VALUE: 1,
+      UNIT: ''
     },
     marvin: {
       CLASS: 'effects__preview--marvin',
       PROPERTY: 'invert',
+      MIN_VALUE: 0,
       MAX_VALUE: 100,
-      UNITS: '%'
+      UNIT: '%'
     },
     phobos: {
       CLASS: 'effects__preview--phobos',
       PROPERTY: 'blur',
+      MIN_VALUE: 0,
       MAX_VALUE: 3,
-      UNITS: 'px'
+      UNIT: 'px'
     },
     heat: {
       CLASS: 'effects__preview--heat',
       PROPERTY: 'brightness',
       MIN_VALUE: 1,
       MAX_VALUE: 3,
-      DIVIDER: 50,
+      UNIT: ''
     }
   };
   var EffectValue = {
@@ -52,26 +58,6 @@
   var effectsListElement = imgUploadElement.querySelector('.effects__list');
   var currentEffectName = effectsListElement.querySelector('.effects__radio:checked').value;
   var currentEffectClass = 'effects__preview--' + currentEffectName;
-  var classNameToCalculateFunction = {
-    'effects__preview--chrome': function (value) {
-      return EffectParameter.chrome.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-    },
-    'effects__preview--sepia': function (value) {
-      return EffectParameter.sepia.PROPERTY + '(' + (value) / EffectValue.MAX + ')';
-    },
-    'effects__preview--marvin': function (value) {
-      return EffectParameter.marvin.PROPERTY + '(' + (value) * EffectParameter.marvin.MAX_VALUE / EffectValue.MAX + EffectParameter.marvin.UNITS + ')';
-    },
-    'effects__preview--phobos': function (value) {
-      return EffectParameter.phobos.PROPERTY + '(' + (value) * EffectParameter.phobos.MAX_VALUE / EffectValue.MAX + EffectParameter.phobos.UNITS + ')';
-    },
-    'effects__preview--heat': function (value) {
-      return EffectParameter.heat.PROPERTY + '(' + ((value) / EffectParameter.heat.DIVIDER + EffectParameter.heat.MIN_VALUE) + ')';
-    },
-    'effects__preview--none': function () {
-      return 'none';
-    }
-  };
 
   // Задает положение пина по умолчанию
   var setDefaultPinPosition = function () {
@@ -79,10 +65,14 @@
     effectDepthElement.style.width = effectPinElement.style.left;
   };
 
+  // Рассчитывает значение фильтра
+  var getFilterValue = function (effect, value) {
+    return value * (EffectParameter[effect].MAX_VALUE - EffectParameter[effect].MIN_VALUE) / EffectValue.MAX + EffectParameter[effect].MIN_VALUE + EffectParameter[effect].UNIT;
+  };
+
   // Применяет эффект к фото в зависимости от положения пина
   var applyEffect = function (value) {
-    var effectFunction = classNameToCalculateFunction[currentEffectClass];
-    imgPreviewElement.style.filter = effectFunction(value);
+    imgPreviewElement.style.filter = currentEffectName !== DEFAULT_EFFECT ? EffectParameter[currentEffectName].PROPERTY + '(' + getFilterValue(currentEffectName, value) + ')' : 'none';
   };
 
   // По клику на эффект добавляет его к фото
@@ -159,7 +149,6 @@
       } else if (movePosition >= PinValue.MAX) {
         movePosition = PinValue.MAX;
         effectLevelValueElement.value = PinValue.MAX;
-
       }
 
       setPinPosition(movePosition);
