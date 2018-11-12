@@ -2,10 +2,6 @@
 
 (function () {
   var DISPLAY_COMMENTS = 5;
-  var Avatar = {
-    MIN: 1,
-    MAX: 6
-  };
   var bigPictureElement = document.querySelector('.big-picture');
   var socialCommentsListElement = bigPictureElement.querySelector('.social__comments');
   var socialCommentElement = socialCommentsListElement.querySelector('.social__comment');
@@ -14,10 +10,9 @@
   // Создает DOM элемент с комментарием и наполняет его информацией
   var createComment = function (comment) {
     var socialComment = socialCommentElement.cloneNode(true);
-    var randomAvatar = window.util.getRandomNum(Avatar.MIN, Avatar.MAX);
 
-    socialComment.querySelector('.social__picture').src = 'img/avatar-' + randomAvatar + '.svg';
-    socialComment.querySelector('.social__text').textContent = comment;
+    socialComment.querySelector('.social__picture').src = comment.avatar;
+    socialComment.querySelector('.social__text').textContent = comment.message;
 
     return socialComment;
   };
